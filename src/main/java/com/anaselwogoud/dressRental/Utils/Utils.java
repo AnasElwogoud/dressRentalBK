@@ -60,13 +60,7 @@ public class Utils {
     }
 
     public static DressDTO mapDressToDressDTOPlusBookings(Dress dress) {
-        DressDTO dressDTO = new DressDTO();
-
-        dressDTO.setId(dress.getId());
-        dressDTO.setSize(dress.getSize());
-        dressDTO.setPrice(dress.getPrice());
-        dressDTO.setDressPhotoUrl(dress.getDressPhotoUrl());
-        dressDTO.setDescription(dress.getDescription());
+        DressDTO dressDTO = mapDressToDressDTO(dress);
 
         if (dress.getBookings() != null) {
             dressDTO.setBookings(dress.getBookings().stream().map(Utils::mapBookingToBookingDTO).collect(Collectors.toList()));
@@ -81,7 +75,6 @@ public class Utils {
         bookingDTO.setId(booking.getId());
         bookingDTO.setRentalDate(booking.getRentalDate());
         bookingDTO.setReturnDate(booking.getReturnDate());
-//        bookingDTO.set(booking.isReturned());
 
         if (mapUser) {
             bookingDTO.setUser(Utils.mapUserToUserDTO(booking.getUser()));
@@ -103,7 +96,7 @@ public class Utils {
         UserDTO userDTO = mapUserToUserDTO(user);
 
         if (!user.getBookings().isEmpty()) {
-            userDTO.setBookings(user.getBookings().stream().map(booking -> mapBookingToBookingDTOPlusBookedDress(booking, false)).collect(Collectors.toList()));
+            userDTO.setBookings(user.getBookings().stream().map(booking -> mapBookingToBookingDTOPlusBookedDress(booking, true)).collect(Collectors.toList()));
         }
         return userDTO;
     }

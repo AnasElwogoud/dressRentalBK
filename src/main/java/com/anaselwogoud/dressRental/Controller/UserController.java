@@ -38,7 +38,6 @@ public class UserController {
 
     @GetMapping("/getLoggedInProfile")
     public ResponseEntity<Response> getLoggedInUserProfile() {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName(); // important
         Response response = userService.getMyInfo(email);

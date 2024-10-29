@@ -5,6 +5,7 @@ import com.anaselwogoud.dressRental.Service.Interface.BookingService;
 import com.anaselwogoud.dressRental.Service.Interface.DressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +21,11 @@ public class DressController {
 
     @Autowired
     private DressService dressService;
-    @Autowired
-    private BookingService BookingService;
+//    @Autowired
+//    private BookingService BookingService;
 
 
-    @PostMapping("/add")
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> addNewDress(
             @RequestParam(value = "dressPhoto", required = false) MultipartFile dressPhoto,
@@ -32,13 +33,24 @@ public class DressController {
             @RequestParam(value = "dressPrice", required = false) BigDecimal dressPrice,
             @RequestParam(value = "dressDescription", required = false) String dressDescription
     ) {
+        // Log received values
+        System.out.println("Received dressPhoto: " + (dressPhoto != null ? dressPhoto.getOriginalFilename() : "null"));
+        System.out.println("Received dressSize: " + dressSize);
+        System.out.println("Received dressPrice: " + dressPrice);
+        System.out.println("Received dressDescription: " + dressDescription);
+        System.out.println("Request Content Type: " + dressPhoto.getContentType());
 
         if (dressPhoto == null || dressPhoto.isEmpty() || dressSize == null || dressSize.isBlank() || dressPrice == null) {
             Response response = new Response();
             response.setStatusCode(400);
-            response.setMessage("Please provide values for all fields (photo, dressSize,dressPrice)");
+//            System.out.println(dressPhoto);
+//            System.out.println(dressSize);
+//            System.out.println(dressPrice);
+//            System.out.println(dressDescription);
+            response.setMessage("Please provide values for all fields (dressPhoto, dressSize, dressPrice)");
             return ResponseEntity.status(response.getStatusCode()).body(response);
         }
+        System.out.println(dressPhoto);
         Response response = dressService.addNewDress(dressPhoto, dressSize, dressPrice, dressDescription);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

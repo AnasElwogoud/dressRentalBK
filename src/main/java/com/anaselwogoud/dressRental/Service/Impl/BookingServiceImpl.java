@@ -22,8 +22,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private BookingRepo bookingRepository;
-    @Autowired
-    private DressServiceImpl dressService;
+    //    @Autowired
+//    private DressServiceImpl dressService;
     @Autowired
     private DressRepo dressRepo;
     @Autowired
@@ -70,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
         Response response = new Response();
         try {
             Bookings booking = bookingRepository.findByBookingConfirmationCode(confirmationCode).orElseThrow(() -> new GlobalException("Booking Not Found"));
-            BookingDTO bookingDTO = Utils.mapBookingToBookingDTO(booking);
+            BookingDTO bookingDTO = Utils.mapBookingToBookingDTOPlusBookedDress(booking, true);
             response.setStatusCode(200);
             response.setMessage("successful");
             response.setBookings(bookingDTO);

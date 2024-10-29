@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
             var token = jwtUtils.generateToken(user);
             response.setStatusCode(200);
             response.setToken(token);
-            response.setRole(user.getRole());
+//            response.setRole(user.getRole());
             response.setExpirationTime("7 Days");
             response.setMessage("successful");
 

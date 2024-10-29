@@ -10,6 +10,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -27,8 +29,11 @@ public class JWTUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
+        Map<String, String> claims = new HashMap<>();
+        userDetails.getAuthorities().forEach(authority -> claims.put("role", authority.getAuthority()));
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .claims(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Key)

@@ -13,7 +13,7 @@ public class DressDTO {
     private Long id;
     private String size;
     private BigDecimal price;
-    private String dressPhotoUrl;
+    private byte[] dressPhotoUrl;
     private String description;
     private List<BookingDTO> bookings;
 }

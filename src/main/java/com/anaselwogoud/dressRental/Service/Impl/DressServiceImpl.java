@@ -12,12 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -35,11 +31,11 @@ public class DressServiceImpl implements DressService {
         Response response = new Response();
 
         try {
-            String imageUrl = uploadImageFile(photo);
-            System.out.println(imageUrl);
-            System.out.println("*********************");
+//            String imageUrl = uploadImageFile(photo);
+//            System.out.println(Arrays.toString(photo.getBytes()));
+//            System.out.println("*********************");
             Dress dress = new Dress();
-            dress.setDressPhotoUrl(imageUrl);
+            dress.setDressPhotoUrl(photo.getBytes());
             dress.setPrice(dressPrice);
             dress.setDescription(description);
             dress.setSize(dressSize);
@@ -104,15 +100,15 @@ public class DressServiceImpl implements DressService {
         Response response = new Response();
 
         try {
-            String imageUrl = null;
-            if (dressPhoto != null && !dressPhoto.isEmpty()) {
-                imageUrl = uploadImageFile(dressPhoto);
-            }
+//            String imageUrl = null;
+//            if (dressPhoto != null && !dressPhoto.isEmpty()) {
+//                imageUrl = uploadImageFile(dressPhoto);
+//            }
             Dress dress = dressRepo.findById(dressId).orElseThrow(() -> new GlobalException("Dress Not Found"));
             if (dressSize != null) dress.setSize(dressSize);
             if (dressPrice != null) dress.setPrice(dressPrice);
             if (description != null) dress.setDescription(description);
-            if (imageUrl != null) dress.setDressPhotoUrl(imageUrl);
+            if (dressPhoto != null) dress.setDressPhotoUrl(dressPhoto.getBytes());
 
             Dress updatedDress = dressRepo.save(dress);
             DressDTO dressDTO = Utils.mapDressToDressDTO(updatedDress);
@@ -191,35 +187,56 @@ public class DressServiceImpl implements DressService {
         return response;
     }
 
-    public String uploadImageFile(MultipartFile file) throws IOException {
-        // Define a directory where you want to store the files
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
-
-        // Ensure the directory exists
-        File directory = new File(uploadDir);
-        if (!directory.exists()) {
-            directory.mkdirs(); // Create the directory if it doesn't exist
-        }
-
-        // Get current date and time and format it
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
-
-        // Create the new file name using the date
-        String formattedDate = now.format(formatter);
-        String extension = getFileExtension(file.getOriginalFilename());
-        String newFileName = formattedDate + (extension.isEmpty() ? "" : "." + extension);
-
-        // Save the file with the new name
-        File savedFile = new File(uploadDir + newFileName);
-        file.transferTo(savedFile);
-
-        return savedFile.getAbsolutePath();
-    }
-
-    // Utility method to extract the file extension
-    private String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        return (dotIndex >= 0) ? fileName.substring(dotIndex + 1) : "";
-    }
+//    public String uploadImageFile(MultipartFile file) throws IOException {
+//        // Define a directory where you want to store the files
+//        String uploadDir = "E://Learning/Projects/dressRental/dressRental_FRT/src/assets" + "/uploads/";
+////        String uploadDir = System.getProperty("user.dir") + "/uploads/";
+//
+//        // Ensure the directory exists
+//        File directory = new File(uploadDir);
+//        if (!directory.exists()) {
+//            directory.mkdirs(); // Create the directory if it doesn't exist
+//        }
+//
+//        // Get current date and time and format it
+//        LocalDateTime now = LocalDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+//
+//        // Create the new file name using the date
+//        String formattedDate = now.format(formatter);
+//        String extension = getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
+//        String newFileName = formattedDate + (extension.isEmpty() ? "" : "." + extension);
+//
+//        // Save the file with the new name
+//        File savedFile = new File(uploadDir + newFileName);
+//        file.transferTo(savedFile);
+//
+//        return savedFile.getName();
+//    }
+//    public String uploadImageFile(MultipartFile file) throws IOException, SQLException {
+//        byte[] bytes = file.getBytes();
+//        Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+//        byte [] imageBytes = null;
+//        imageBytes = image.getImage().getBytes(1,(int) image.getImage().length());
+//        Image image = new Image();
+//        image.setImage(blob);
+//        imageService.create(image);
+//        return "redirect:/";
+//        // Create the new file name using the date
+//        String formattedDate = now.format(formatter);
+//        String extension = getFileExtension(Objects.requireNonNull(file.getOriginalFilename()));
+//        String newFileName = formattedDate + (extension.isEmpty() ? "" : "." + extension);
+//
+//        // Save the file with the new name
+//        File savedFile = new File(uploadDir + newFileName);
+//        file.transferTo(savedFile);
+//
+//        return savedFile.getName();
+//    }
+//
+//    // Utility method to extract the file extension
+//    private String getFileExtension(String fileName) {
+//        int dotIndex = fileName.lastIndexOf('.');
+//        return (dotIndex >= 0) ? fileName.substring(dotIndex + 1) : "";
+//    }
 }

@@ -18,7 +18,11 @@ public class Dress {
 
     private String size;
     private BigDecimal price;
-    private String dressPhotoUrl;
+    @Lob
+    @Column(length = 1000000)
+    private byte[] dressPhotoUrl;
+
+//    private String dressPhotoUrl;
     private String description;
     @OneToMany(mappedBy = "dress", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Bookings> bookings = new ArrayList<>();
